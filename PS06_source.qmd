@@ -103,7 +103,7 @@ Do you think the relationship between `hs` and `income` is strong or weak, linea
 :::
 
 ::: {.callout-important icon="false" collapse="false" title="Problem 1 Answers"}
-* Delete this and put your text answer here.
+* The relationship between `hs` and `income` appears to be strong and linear. As the percentage of adults with a high-school degree increases, median household income generally increases.
 :::
 
 ::: {.callout-note icon="false" title="Problem 2"}
@@ -113,10 +113,12 @@ Which regression line (high `urbanization` or low `urbanization`) in @fig-urb ha
 ::: {.callout-important icon="false" collapse="false" title="Problem 2 Answers"}
 ```{r}
 # Type your code and comments inside the code chunk
+mod_full <- lm(income ~ hs * urbanization, data = hate_crimes)
 
+get_regression_table(mod_full)
 ```
 
-* Delete this and put your text answer here.
+* High urbanization regression line has the larger intercept
 :::
 
 ::: {.callout-note icon="false" title="Problem 3"}
@@ -124,7 +126,7 @@ Does the slope look fairly similar (parallel) for the two levels of urbanization
 :::
 
 ::: {.callout-important icon="false" collapse="false" title="Problem 3 Answers"}
-* Delete this and put your text answer here.
+* Yes. The slopes appear to be **fairly similar and approximately paralle**l for the two levels of urbanization.
 :::
 
 ::: {.callout-note icon="false" title="Problem 4"}
@@ -132,11 +134,14 @@ Based on the data visualization in @fig-urb, and your answer to 3, do you think 
 :::
 
 ::: {.callout-important icon="false" collapse="false" title="Problem 4 Answers"}
-* Delete this and put your text answer here.
+* A **parallel-slopes model** would be appropriate because the two regression lines appear to have fairly similar slopes. There does not appear to be a large difference in the slopes between high and low urbanization.
 
 ```{r}
 # Type your code and comments inside the code chunk
 
+med_income_parallel <- lm(income ~ hs + urbanization, data = hate_crimes)
+
+get_regression_table(med_income_parallel)
 ```
 :::
 
@@ -147,7 +152,15 @@ Create a data visualization comparing median household income at "low" and "high
 ::: {.callout-important icon="false" collapse="false" title="Problem 5 Answers"}
 ```{r}
 # Type your code and comments inside the code chunk
-
+ggplot(data = hate_crimes, 
+       aes(x = urbanization, y = income)) +
+  geom_boxplot() +
+  labs(
+    x = "Level of Urbanization",
+    y = "Median Household Income (USD)",
+    title = "Median Household Income by Level of Urbanization"
+  ) +
+  theme_bw()
 ```
 :::
 
@@ -159,12 +172,25 @@ Run a linear regression model that examines the relationship between household `
 ```{r}
 library(scales)  # Used to format numbers and for dollars
 # Type your code and comments inside the code chunk
+med_income_model <- lm(income ~ hs + urbanization, data = hate_crimes)
 
+get_regression_table(med_income_model)
 ```
 
 ```{r}
 # Type your code and comments here
-
+ggplot(hate_crimes, aes(x = hs, y = income, color = urbanization)) +
+  geom_point() +
+  geom_abline(
+    intercept = -113725,
+    slope = 1986.79
+  ) +
+  labs(
+    x = "Percent of Adults with High-School Degree",
+    y = "Median Household Income (USD)",
+    title = "Median Household Income vs. High-School Education"
+  ) +
+  theme_bw()
 ```
 :::
 
@@ -173,7 +199,7 @@ Is the intercept the same for the states with a "low" and "high" level of urbani
 :::
 
 ::: {.callout-important icon="false" collapse="false" title="Problem 7 Answers"}
-* Delete this and put your text answer here.
+* The intercepts are different, but the slopes are the same because `med_income_model` is a **parallel-slopes model**.
 :::
 
 ::: {.callout-note icon="false" title="Problem 8"}
@@ -183,12 +209,12 @@ What is the slope for the regression line of the states with a "high" level of u
 ::: {.callout-important icon="false" collapse="false" title="Problem 8 Answers"}
 ```{r}
 # Type your code and comments inside the code chunk
-
+get_regression_table(med_income_model)
 ```
 
-* Delete this and put your text answer here.
+* The slope is **$1,986.79 per 1 percentage-point increase** in the percentage of adults with a high-school degree.
 
-* Delete this and put your text answer here.
+* The intercept is **−$113,725.19**.
 :::
 
 ::: {.callout-note icon="false" title="Problem 9"}
@@ -196,9 +222,8 @@ What is the slope for the regression line of the states with a "low" level of ur
 :::
 
 ::: {.callout-important icon="false" collapse="false" title="Problem 9 Answers"}
-* Delete this and put your text answer here.
-
-* Delete this and put your text answer here.
+* The slope is $\$1,986.79$ per 1 percentage-point increase in $hs$
+* The intercept is $-\$121,058.52$.
 :::
 
 ::: {.callout-note icon="false" title="Problem 10"}
@@ -206,7 +231,7 @@ Based on your regression table output (and the data visualizations), is median h
 :::
 
 ::: {.callout-important icon="false" collapse="false" title="Problem 10 Answers"}
-* Delete this and put your text answer here.
+* Median household income is **higher** in states with high urbanization by **$7,333.33**.
 :::
 
 ::: {.callout-note icon="false" title="Problem 11"}
@@ -214,7 +239,7 @@ For every increase in 1 percentage point of high-school educated adults, what is
 :::
 
 ::: {.callout-important icon="false" collapse="false" title="Problem 11 Answers"}
-* Delete this and put your text answer here.
+* For every 1 percentage-point increase in the percentage of adults with a high-school degree, median household income is associated with an **increase of approximately $1,986.79**.
 :::
 
 ::: {.callout-note icon="false" title="Problem 12"}
@@ -229,7 +254,9 @@ $$\widehat{\text{income}} = `r comma(coef(summary(med_income_model))[1])` + `r r
 :::
 
 ::: {.callout-important icon="false" collapse="false" title="Problem 12 Answers"}
-- Your $LaTeX$ answer here.
+- $$
+\widehat{\text{income}} = -113725.19 + 1986.79 \times \text{hs}
+$$
 :::
 
 ::: {.callout-note icon="false" title="Problem 13"}
@@ -239,10 +266,10 @@ What would you predict as the median household income for a state with a **high*
 ::: {.callout-important icon="false" collapse="false" title="Problem 13 Answers"}
 ```{r}
 # Type your code and comments inside the code chunk
-
+-113725 + 1986.79 * 85
 ```
 
-* Delete this and put your text answer here.
+* The predicted income is **$55,153.15**.
 :::
 
 ::: {.callout-note icon="false" title="Problem 14"}
@@ -252,10 +279,11 @@ What would you predict as the median household income for a state with a **low**
 ::: {.callout-important icon="false" collapse="false" title="Problem 14 Answers"}
 ```{r}
 # Type your code and comments inside the code chunk
-
+-113725 + 1986.79 * 85 - 7333.33
 ```
 
-* Delete this and put your text answer here.
+* The predicted income is **$47,819.82**.
+
 :::
 
 ::: {.callout-note icon="false" title="Problem 15"}
@@ -263,7 +291,8 @@ What would you predict as the median household income for a state with a **low**
 :::
 
 ::: {.callout-important icon="false" collapse="false" title="Problem 15 Answers"}
-* Delete this and put your text answer here.
+* The predicted income is **−$61,316.63**.
+
 :::
 
 ::: {.callout-note icon="false" title="Problem 16"}
@@ -273,16 +302,22 @@ What was the observed `income` value for Maine (row 2)? What was the prediction 
 ::: {.callout-important icon="false" collapse="false" title="Problem 16 Answers"}
 ```{r}
 # Type your code and comments inside the code chunk
-
+hate_crimes %>%
+  filter(state == "Maine") %>%
+  mutate(
+    prediction = predict(med_income_model, newdata = .),
+    residual = income - prediction
+  ) %>%
+  select(state, income, prediction, residual)
 ```
 
-* Delete this and put your text answer here.
+* The observed `income` for Maine is **$51,710**.
 
-* Delete this and put your text answer here.
+* The predicted income accoring to `med_income_model` is **$57,752.93**.
 
-* Delete this and put your text answer here.
+* The residual is **−$6,042.93**.
 
-* Delete this and put your text answer here.
+* Since the residual is **negative**, the model **overestimated** Maine's median household income.
 :::
 
 # Independent Analysis
@@ -327,7 +362,19 @@ Generate a regression model with `voles` as the response variable `y` and `veg` 
 ::: {.callout-important icon="false" collapse="false" title="Problem 17 Answers"}
 ```{r}
 # Type your code and comments inside the code chunk
+voles_mod <- lm(voles ~ veg + soil, data = vole_trapping)
 
+get_regression_table(voles_mod)
+
+ggplot(vole_trapping, aes(x = veg, y = voles, color = soil)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(
+    x = "Percent Vegetation Cover",
+    y = "Number of Voles",
+    title = "Vole Population by Vegetation Cover and Soil Type"
+  ) +
+  theme_bw()
 ```
 :::
 
@@ -336,7 +383,7 @@ Would you recommend to a manager that they try to protect sites with high or low
 :::
 
 ::: {.callout-important icon="false" collapse="false" title="Problem 18 Answers"}
-* Delete this and put your text answer here.
+* I would recommend **protecting sites with high vegetation cover** because the regression model shows that the **number of voles increases as vegetation cover increases**.
 :::
 
 ::: {.callout-note icon="false" title="Problem 19"}
@@ -344,11 +391,11 @@ Dry sites are typically a lot less money to purchase and maintain for conservati
 :::
 
 ::: {.callout-important icon="false" collapse="false" title="Problem 19 Answers"}
-* Delete this and put your text answer here.
+* A dry site would need approximately $56.10\%$ vegetation cover to support a population of about 30 voles.
 
 ```{r}
 # Type your code and comments inside the code chunk
-
+coef(voles_mod)
 ```
 :::
 
@@ -359,11 +406,17 @@ The Nature Conservancy is looking at purchasing a site for this species (in the 
 ::: {.callout-important icon="false" collapse="false" title="Problem 20 Answers"}
 ```{r}
 # Type your code and comments inside the code chunk
-
+predict(
+  voles_mod,
+  newdata = data.frame(
+    veg = 40,
+    soil = "moist"
+  )
+)
 
 ```
 
-* Delete this and put your text answer here.
+* The predicted vole population is approximately **$34.93$** voles for a site with **$40\%$** vegetation cover and moist soil.
 :::
 
 # Turning in Your Work
